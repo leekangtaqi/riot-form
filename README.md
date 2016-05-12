@@ -1,7 +1,7 @@
 # riot-form
 this is a riot form mixin
 ###Install
-    npm install riot-form
+    npm install riot-form-mixin
 ###Usage
     <test>
         <form name="my_form">
