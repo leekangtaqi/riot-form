@@ -1,5 +1,5 @@
 {
-  "name": "riot-validator",
+  "name": "riot-form",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/node-rookie/riot-validator.git"
+    "url": "git+https://github.com/node-rookie/riot-form.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/node-rookie/riot-validator/issues"
+    "url": "https://github.com/node-rookie/riot-form/issues"
   },
-  "homepage": "https://github.com/node-rookie/riot-validator",
+  "homepage": "https://github.com/node-rookie/riot-form",
   "devDependencies": {
     "riot": "^2.3.16"
   }
