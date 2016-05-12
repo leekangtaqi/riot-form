@@ -1,7 +1,7 @@
-# riot-validator
-this is a riot validator mixin
+# riot-form
+this is a riot form mixin
 ###Install
-    npm install riot-validator
+    npm install riot-form
 ###Usage
     <test>
         <form name="my_form">
