@@ -1,6 +1,6 @@
 {
   "name": "riot-form-mixin",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/node-rookie/riot-form.git"
+    "url": "git+https://github.com/leekangtaqi/riot-form.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/node-rookie/riot-form/issues"
+    "url": "https://github.com/leekangtaqi/riot-form/issues"
   },
-  "homepage": "https://github.com/node-rookie/riot-form",
+  "homepage": "https://github.com/leekangtaqi/riot-form",
   "devDependencies": {
     "riot": "^2.3.16"
   }
