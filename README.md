@@ -44,10 +44,10 @@ when error:
 ####Custom validator
 
 ```js
-    registerValidators({
-        name: 'custom-validator',
-        fn: function(){
-            return ...
-        }
-    })
+registerValidators({
+    name: 'custom-validator',
+    fn: function(){
+        return ...
+    }
+})
 ```
