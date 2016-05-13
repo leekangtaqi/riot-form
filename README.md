@@ -5,16 +5,19 @@ this is a riot form mixin
     npm install riot-form-mixin
 
 ###Usage
-    <test>
-        <form name="my_form">
-            <input required/>
-        </form>
-        <script>
-            this.mixin('form');
-            this.useForm();
-            //...
-        </script>
-    </test>
+
+```js
+<test>
+    <form name="my_form">
+        <input required/>
+    </form>
+    <script>
+        this.mixin('form');
+        this.useForm();
+        //...
+    </script>
+</test>
+```
 
 ###Validators
 
@@ -40,9 +43,11 @@ when error:
 
 ####Custom validator
 
+```js
     registerValidators({
         name: 'custom-validator',
         fn: function(){
             return ...
         }
     })
+```
