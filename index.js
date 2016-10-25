@@ -189,7 +189,6 @@ function bindEvt(input, field, tag){
         validateField(val, input, field, tag);
     }
     input.addEventListener('input', validateHandler);
-    // add handler to map of tag
     !tag.formInputListenersMap && (tag.formInputListenersMap = {});
     var id = genId(16);
     input.dataset.eid = id;
@@ -211,7 +210,8 @@ function unbindEvt(tag){
     if(!tag.formInputListenersMap){
         return;
     }
-    for(var k of Object.keys(tag.formInputListenersMap)){
+    for(var i=0, len = Object.keys(tag.formInputListenersMap); i<len; i++){
+        var k = Object.keys(tag.formInputListenersMap)[i];
         var input = tag.formInputListenersMap[k].input;
         var listeners = tag.formInputListenersMap[input.dataset.eid].handlers;
         listeners.forEach(function(listener){
@@ -466,5 +466,5 @@ function registerValidators(name, fn){
 
 window.form = {
     useForm: initForm,
-    resetForm
+    resetForm: resetForm
 };
