@@ -210,14 +210,22 @@ function unbindEvt(tag){
     if(!tag.formInputListenersMap){
         return;
     }
-    for(var i=0, len = Object.keys(tag.formInputListenersMap); i<len; i++){
-        var k = Object.keys(tag.formInputListenersMap)[i];
+    var keys = Object.keys(tag.formInputListenersMap);
+    for(var i=0, len = keys.length; i<len; i++){
+        var k = keys[i];
         var input = tag.formInputListenersMap[k].input;
         var listeners = tag.formInputListenersMap[input.dataset.eid].handlers;
         listeners.forEach(function(listener){
             input.removeEventListener('input', listener);
         });
     }
+    // for(var k of Object.keys(tag.formInputListenersMap)){
+    //     var input = tag.formInputListenersMap[k].input;
+    //     var listeners = tag.formInputListenersMap[input.dataset.eid].handlers;
+    //     listeners.forEach(function(listener){
+    //         input.removeEventListener('input', listener);
+    //     });
+    // }
     input.dataset.eid = undefined;
     delete input.dataset['eid'];
     tag['formInputListenersMap'] && delete tag['formInputListenersMap'];
