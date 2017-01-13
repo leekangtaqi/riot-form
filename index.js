@@ -177,6 +177,7 @@ function addFormRule(input, rule, tag){
 
 function bindEvt(input, field, tag){
     var validateHandler = function(e){
+        console.warn("validate handler ..............");
         var val = e.target.value.trim();
         if(val === field.$originVal){
             field.$pristine = true;
@@ -189,6 +190,8 @@ function bindEvt(input, field, tag){
         validateField(val, input, field, tag);
     }
     input.addEventListener('input', validateHandler);
+    console.warn(input);
+    // add handler to map of tag
     !tag.formInputListenersMap && (tag.formInputListenersMap = {});
     var id = genId(16);
     input.dataset.eid = id;
@@ -207,25 +210,17 @@ function genId(n){
 }
 
 function unbindEvt(tag){
+    console.warn("unbind");
     if(!tag.formInputListenersMap){
         return;
     }
-    var keys = Object.keys(tag.formInputListenersMap);
-    for(var i=0, len = keys.length; i<len; i++){
-        var k = keys[i];
+    for(var k of Object.keys(tag.formInputListenersMap)){
         var input = tag.formInputListenersMap[k].input;
         var listeners = tag.formInputListenersMap[input.dataset.eid].handlers;
         listeners.forEach(function(listener){
             input.removeEventListener('input', listener);
         });
     }
-    // for(var k of Object.keys(tag.formInputListenersMap)){
-    //     var input = tag.formInputListenersMap[k].input;
-    //     var listeners = tag.formInputListenersMap[input.dataset.eid].handlers;
-    //     listeners.forEach(function(listener){
-    //         input.removeEventListener('input', listener);
-    //     });
-    // }
     input.dataset.eid = undefined;
     delete input.dataset['eid'];
     tag['formInputListenersMap'] && delete tag['formInputListenersMap'];
@@ -247,7 +242,6 @@ function resetFormPristineOrDirty(input, tag){
 
 function validateField(val, input, field, tag){
     var errorMap = field.$rule;
-    
     Object.keys(errorMap).forEach(function(eKey){
         var isInvalid = validators[eKey].apply(null, [val, errorMap[eKey]]);
         if(isInvalid){
@@ -275,6 +269,7 @@ function validateField(val, input, field, tag){
     }
 
     tag._shouldSync = true;
+    console.warn('validating ......');
     tag.update();
 
     function setFieldStatusInvalid(field, key){
@@ -322,93 +317,23 @@ function initForm(){
         selects.length && each(selects, function(node){extractInput(node, me)});
     }
     function updateHandler(){
-        if(me.show && !me._shouldSync){
+        if(!me._shouldSync){
             var forms = me.root.querySelectorAll('form');
             var inputs = me.root.querySelectorAll('input');
             var selects = me.root.querySelectorAll('select');
-            var data = compareField(me, forms, inputs, selects); 
-            if(!data
-                || data.add.length != 0
-                || data.del.length != 0
-            ){
+            if(compareField(me, forms, inputs, selects)){
                 resetFormHandler(forms, inputs, selects);  
             };
-            me.update();
         }
         me._shouldSync = false;
     }
-    /**
-     * check form structure changed or not
-     * @param tag { Object } riot tag
-     * @param forms { Array<DomElement> }
-     * @param inputs { Array<DomElement> }
-     * @param selects { Array<DomElement> }
-     */
     function compareField(tag, forms, inputs, selects){
-        if(!tag.forms){
-            return false;
-        }
-        var formNames = [].slice.call(forms).map(function(form){ return form.getAttribute('name') });
-        var inputNames = inputs && groupBy([].slice.call(inputs), function(input){
-            return input.form.getAttribute('name');
-        }, function(input){
-            return input.getAttribute('name');
-        }) || {};
-        var selectNames = selects && groupBy([].slice.call(selects), function(input){
-            return input.form.getAttribute('name');
-        }, function(input){
-            return input.getAttribute('name');
-        }) || {};
-        var formToAdd = [];
-        var prevForms = Object.keys(tag.forms) || [];
-        for(var i=0, len=forms.length; i<len; i++){
-            var form = forms[i];
-            var formName = form.getAttribute('name');
-            var formInTag = tag.forms[formName];
-            prevForms = prevForms.filter(function(f){
-                return f != formName;
-            })
-            if(!formInTag){
-                formToAdd.push(form);
-                continue;
-            }
-            var fields = extractField(formInTag);
-            var fieldNames = Object.keys(fields);
-            for(var j=0, len2=fieldNames.length; j<len2; j++){
-                var fieldName = fieldNames[j];
-                if(
-                isFieldModified(formName, fieldName, inputNames, selectNames) ||
-                (
-                    len2 != 
-                        (inputNames[formName] && inputNames[formName].length || 0) + 
-                        ((selectNames[formName] && selectNames[formName].length) || 0))
-                ){
-                    formToAdd.push(formName);
-                    break;
-                }
-            }
-        }
-        return { add: formToAdd, del: prevForms };
+        //check form structure changed or not
+        each(forms, function(form){
+            
+        })
     }
-
-    function isFieldModified(formName, fieldName, inputNames, selectNames){
-        var checkInput = inputNames && inputNames[formName] && inputNames[formName].length && inputNames[formName].indexOf(fieldName) < 0 || false;
-        var checkSelect = selectNames && selectNames[formName] && selectNames[formName].length && selectNames[formName].indexOf(fieldName) < 0 || false;
-        return (checkInput && checkSelect);
-    }
-    
-    function groupBy(arr, fn1, fn2){
-        var res = {};
-        for(var i=0, len=arr.length; i<len; i++){
-            var c = fn1(arr[i]);
-            !res[c] && (res[c] = []);
-            res[c].push(fn2(arr[i]));
-        }
-        return res;
-    }
-    me.on('update', function(){
-        setTimeout(updateHandler, 0);
-    });
+    me.on('update', updateHandler);
     nextTick(function(){
         me.update();
     })
@@ -418,6 +343,26 @@ function each(arrLike, cb){
     for(var i=0, len=arrLike.length; i<len; i++){
         cb(arrLike[i]);
     }
+}
+
+
+function reForm(tag){
+    console.warn("???");
+    walkTheDOM(tag.root, function (node) {
+        if (node.nodeType === 1) {
+            if(node.tagName === 'form'.toUpperCase()){
+                addForm(node, tag);
+            }
+            if(node.tagName === 'input'.toUpperCase() ||
+                node.tagName === 'select'.toUpperCase()
+            ){
+                extractInput(node, tag);
+            }
+        }
+    });
+    nextTick(function(){
+        tag.update();
+    })
 }
 
 function resetForm(){
@@ -474,5 +419,5 @@ function registerValidators(name, fn){
 
 window.form = {
     useForm: initForm,
-    resetForm: resetForm
+    resetForm
 };
